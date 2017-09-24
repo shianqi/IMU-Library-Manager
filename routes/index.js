@@ -1,12 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const schedule = require("node-schedule")
+const mail = require('./email')
 const login = require('./service').login
 const logout = require('./service').logout
 const setResv = require('./service').setResv
 const checkResv = require('./service').checkResv
 const signInResv = require('./service').signInResv
 const signOutResv = require('./service').signOutResv
+
+const USERNAME = '0161122750'
+const PASSWORD = '05241104'
 
 const dateList = [
     {
@@ -29,20 +33,51 @@ const dateList = [
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    res.render('index', { title: 'Express' });
+    const getMessage = async function() {
+        try {
+            await login(USERNAME, PASSWORD)
+            const resvMessage = await checkResv()
+            const { id='', status } = resvMessage.length>0 ? resvMessage[0]:{}
+            await logout()
+            res.render('index', { title: status });
+        } catch (e){
+            res.render('index', { title: 'Error' })
+        }
+    }
+    getMessage().then()
 });
 
-const reservation = async function(start, end){
+router.get('/checkIn', function() {
+
+})
+
+//100486556 100482108 3A-075
+//100486652 100482108 3B1-091
+//100486650 100482108 3B1-089
+/**
+ * 预约座位
+ * @param start 开始时间
+ * @param end 结束时间
+ * @returns {Promise.<void>}
+ */
+const reservation = async function(start, end) {
     try {
-        await login('0141122427', '0141122427')
-        await setResv(100486650, 100482108, start, end)
-        await logout()
+        const now = new Date()
+        if(now.valueOf()<=end.valueOf()) {
+            await login(USERNAME, PASSWORD)
+            await setResv(100486650, 100482108, start.valueOf()>now.valueOf()?start: now, end)
+            await logout()
+        }
     }catch(e){
-        console.log("错误：", e)
+        console.log(new Date().toLocaleString(), "错误：", e)
     }
 }
 
-const priorReservation = async function(){
+/**
+ * 预约两天内
+ * @returns {Promise.<void>}
+ */
+const priorReservation = async function() {
     try{
         const now = new Date()
         for(let i=0;i<dateList.length;i++){
@@ -72,39 +107,59 @@ const priorReservation = async function(){
     }
 }
 
-//100486652 3B1-091
-//100486650 3B1-089
+/**
+ * 签退
+ * @returns {Promise.<void>}
+ */
 const signOut = async function() {
     try {
-        await login('0141122427', '0141122427')
+        await login(USERNAME, PASSWORD)
         const resvMessage = await checkResv()
-        const { id='' } = resvMessage.length>0 ? resvMessage[0]:{}
-        await signOutResv(id)
+        const { id='', status } = resvMessage.length>0 ? resvMessage[0]:{}
+        if(status>8000) {
+            await signOutResv(id)
+        }
         await logout()
     }catch(e){
-        console.log("签退错误：", e)
+        console.log(new Date().toLocaleString(), "签退错误：", e)
     }
 }
 
+/**
+ * 签到
+ * @returns {Promise.<void>}
+ */
 const singIn = async function() {
     try {
-        await login('0141122427', '0141122427')
+        await login(USERNAME, PASSWORD)
         const resvMessage = await checkResv()
         const { devId, labId, id='' } = resvMessage.length>0 ? resvMessage[0]:{}
         await signInResv(devId, labId, id)
         await logout()
     }catch(e) {
-        console.log("签到错误：", e)
+        mail('【自动预约系统】', `出问题啦！原因：${e}`)
+        console.log(new Date().toLocaleString(), "签到错误：", e)
     }
 }
 
-
-module.exports = router;
-schedule.scheduleJob('20 7,11,15,19 * * *', async function(){
-    await signOut()
+/**
+ * 7:31 11:31 15:31 19:31 自动签退签到
+ */
+schedule.scheduleJob('31 7,11,15,19 * * *', async function() {
     await singIn()
 });
-schedule.scheduleJob('* 10 7 * * *', async function(){
+
+/**
+ * 7:21 11:21 15:21 19:21 自动签退签到
+ */
+schedule.scheduleJob('21 7,11,15,19 * * *', async function() {
+    await signOut()
+});
+
+/**
+ * 每天7:10分自动预约当天和明天
+ */
+schedule.scheduleJob('0 10 7 * * *', async function() {
     await priorReservation()
 });
 

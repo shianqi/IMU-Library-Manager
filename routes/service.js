@@ -48,7 +48,7 @@ const login = function(username, password){
             const data = JSON.parse(_data)
             if(!error && response.statusCode===200){
                 if(data.msg==='ok'){
-                    console.log('登录成功')
+                    console.log(new Date().toLocaleString(), '登录成功')
                     resolve(data.data)
                 }else{
                     reject(new Error(`登录失败: ${data.msg}`))
@@ -79,7 +79,7 @@ const logout = function() {
             const data = JSON.parse(_data)
             if(!error && response.statusCode===200){
                 if(data.msg==='操作成功！'){
-                    console.log('注销成功')
+                    console.log(new Date().toLocaleString(), '注销成功')
                     resolve(data)
                 }else{
                     reject(new Error(`注销失败: ${data.msg}`))
@@ -107,7 +107,7 @@ const checkResv = function() {
             const data = JSON.parse(_data)
             if(!error && response.statusCode===200){
                 if(data.msg==='ok'){
-                    console.log('查询成功')
+                    console.log(new Date().toLocaleString(), '查询成功')
                     resolve(data.data)
                 }else{
                     reject(new Error(`查询失败: ${data.msg}`))
@@ -160,7 +160,7 @@ const setResv = function(dev_id, lab_id, _start, _end) {
             if(!error && response.statusCode===200){
                 const data = JSON.parse(_data)
                 if(data.msg==='操作成功！'){
-                    console.log('预约成功', start, end)
+                    console.log(new Date().toLocaleString(), '预约成功', start, end)
                     resolve(data)
                 }else{
                     reject(new Error(`预约失败: (${start} - ${end})${data.msg}`))
@@ -196,7 +196,7 @@ const signInResv = function(dev_id, lab_id, resv_id) {
             if(!error && response.statusCode===200) {
                 const data = JSON.parse(_data)
                 if(data.ret===1 || data.msg==='您已签到，无需重复签到'){
-                    console.log('签到成功')
+                    console.log(new Date().toLocaleString(), '签到成功')
                     resolve(data.msg)
                 }else{
                     reject(data.msg)
@@ -227,20 +227,15 @@ const signOutResv = function(resv_id) {
     }
     return new Promise((resolve, reject)=>{
         if(resv_id===''){
-            console.log('不需签退')
+            console.log(new Date().toLocaleString(), '不需签退')
             resolve()
             return
         }
         request.get(option, (error, response, _data)=>{
             if(!error && response.statusCode===200) {
                 const data = JSON.parse(_data)
-                console.log(data)
-                // if(data.ret===1 || data.msg==='您已签到，无需重复签到'){
-                //     console.log('签到成功')
-                //     resolve(data.msg)
-                // }else{
-                //     reject(data.msg)
-                // }
+                console.log(new Date().toLocaleString(), data.msg)
+                resolve()
             }else{
                 reject(error)
             }
