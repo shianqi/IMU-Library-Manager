@@ -9,8 +9,8 @@ const checkResv = require('./service').checkResv
 const signInResv = require('./service').signInResv
 const signOutResv = require('./service').signOutResv
 
-const USERNAME = '0161122750'
-const PASSWORD = '05241104'
+const USERNAME = '0141120951'
+const PASSWORD = '0141120951'
 
 const dateList = [
   {
@@ -162,5 +162,12 @@ schedule.scheduleJob('21 7,11,15,19 * * *', async function () {
 schedule.scheduleJob('0 10 7 * * *', async function () {
   await priorReservation()
 })
+
+const init = async function () {
+  await priorReservation()
+  await singIn()
+}
+
+init()
 
 module.exports = router

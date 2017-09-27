@@ -122,7 +122,7 @@ const checkResv = function () {
  * 预约座位
  * @returns {Promise}
  */
-const setResv = function (devId, labId, _start, _end) {
+const setResv = function (dev_id, lab_id, _start, _end) {
   const start = _start.Format('yyyy-MM-dd hh:mm')
   const end = _end.Format('yyyy-MM-dd hh:mm')
 
@@ -131,8 +131,8 @@ const setResv = function (devId, labId, _start, _end) {
     headers,
     jar,
     form: {
-      devId,
-      labId,
+      dev_id,
+      lab_id,
       start,
       end,
       room_id: '',
@@ -176,16 +176,16 @@ const setResv = function (devId, labId, _start, _end) {
  * @param resv_id
  * @returns {Promise}
  */
-const signInResv = function (devId, labId, resvId) {
+const signInResv = function (dev_id, lab_id, resv_id) {
   const option = {
     url: resvUrl,
     headers,
     jar,
     form: {
       act: 'resv_checkin',
-      devId,
-      labId,
-      resvId
+      dev_id,
+      lab_id,
+      resv_id
     }
   }
   return new Promise((resolve, reject) => {
@@ -210,7 +210,7 @@ const signInResv = function (devId, labId, resvId) {
  * @param resv_id
  * @returns {Promise}
  */
-const signOutResv = function (resvId) {
+const signOutResv = function (resv_id) {
   const option = {
     url: resvUrl,
     headers,
@@ -218,12 +218,12 @@ const signOutResv = function (resvId) {
     form: {
       act: 'resv_leave',
       type: '2',
-      resvId,
+      resv_id,
       _nocache: new Date().valueOf()
     }
   }
   return new Promise((resolve, reject) => {
-    if (resvId === '') {
+    if (resv_id === '') {
       console.log(new Date().toLocaleString(), '不需签退')
       resolve()
       return
