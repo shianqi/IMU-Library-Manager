@@ -97,10 +97,10 @@ const priorReservation = async function () {
         dateList[i].end[1],
         0
       )
-      // const startTomorrow = new Date(start.valueOf() + 24 * 60 * 60 * 1000)
-      // const endTomorrow = new Date(end.valueOf() + 24 * 60 * 60 * 1000)
+      const startTomorrow = new Date(start.valueOf() + 24 * 60 * 60 * 1000)
+      const endTomorrow = new Date(end.valueOf() + 24 * 60 * 60 * 1000)
       await reservation(start, end)
-      // await reservation(startTomorrow, endTomorrow)
+      await reservation(startTomorrow, endTomorrow)
     }
   } catch (e) {
     console.log(e)
