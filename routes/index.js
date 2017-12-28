@@ -9,8 +9,8 @@ const checkResv = require('./service').checkResv
 const signInResv = require('./service').signInResv
 const signOutResv = require('./service').signOutResv
 
-const USERNAME = '0141122427'
-const PASSWORD = '0141122427'
+const USERNAME = '0161110873'
+const PASSWORD = 'guanYAnan1'
 
 const dateList = [
   {
@@ -54,6 +54,7 @@ router.get('/checkIn', function () {
 // 100486556 100482108 3A-075
 // 100486652 100482108 3B1-091
 // 100486650 100482108 3B1-089
+// 100486801 100485581 3B2-054 有插座
 /**
  * 预约座位
  * @param start 开始时间
@@ -65,7 +66,7 @@ const reservation = async function (start, end) {
     const now = new Date()
     if (now.valueOf() <= end.valueOf()) {
       await login(USERNAME, PASSWORD)
-      await setResv(100486650, 100482108, start.valueOf() > now.valueOf() ? start : now, end)
+      await setResv(100486801, 100485581, start.valueOf() > now.valueOf() ? start : now, end)
       await logout()
     }
   } catch (e) {
