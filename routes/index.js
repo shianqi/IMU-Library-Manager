@@ -10,7 +10,7 @@ const signInResv = require('./service').signInResv
 const signOutResv = require('./service').signOutResv
 
 const USERNAME = '0161110873'
-const PASSWORD = 'guanYAnan1'
+const PASSWORD = '0161110873'
 
 const dateList = [
   {
