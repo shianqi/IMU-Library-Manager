@@ -9,8 +9,8 @@ const checkResv = require('./service').checkResv
 const signInResv = require('./service').signInResv
 const signOutResv = require('./service').signOutResv
 
-const USERNAME = '0141122427'
-const PASSWORD = '0141122427'
+const USERNAME = '0141120951'
+const PASSWORD = '0141120951'
 
 const dateList = [
   {
@@ -69,7 +69,7 @@ const reservation = async function (start, end) {
     const now = new Date()
     if (now.valueOf() <= end.valueOf()) {
       await login(USERNAME, PASSWORD)
-      await setResv(100486799, 100485581, start.valueOf() > now.valueOf() ? start : now, end)
+      await setResv(100486650, 100482108, start.valueOf() > now.valueOf() ? start : now, end)
       await logout()
     }
   } catch (e) {
