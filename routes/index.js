@@ -9,6 +9,7 @@ const checkResv = require('./service').checkResv
 const signInResv = require('./service').signInResv
 const signOutResv = require('./service').signOutResv
 
+// 0161110873 0161110873
 const USERNAME = '0141122427'
 const PASSWORD = '0141122427'
 
